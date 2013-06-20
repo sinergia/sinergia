@@ -11,7 +11,7 @@ class Helpers
 
     /**
      * @param $__FILE__
-     * @param  mixed $__VARS__
+     * @param  mixed  $__VARS__
      * @return string | null
      */
     public static function render($__FILE__, $__VARS__ = array())
