@@ -12,7 +12,8 @@ class Blank implements ArrayAccess, IteratorAggregate
     public static function __callStatic($name, $args = array()) { return new static(); }
     public function __invoke() { return $this; }
     public function __get($name) { return $this; }
-    public function __set($name, $value) { return $this; }
+    public function __set($name, $value) { $this->$name = $value; }
+    public function __unset($name) { unset($this->$name); }
     public function offsetExists($offset) { return false; }
     public function offsetGet($offset) { return $this; }
     public function offsetSet($offset, $value) { return $this; }
