@@ -1,0 +1,21 @@
+{
+    "name": "sinergia/sinergia",
+    "type": "framework",
+    "description": "Sinergia Framework",
+    "keywords": ["sinergia", "framework", "mvc"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marcos Neves",
+            "homepage": "http://www.sinergia.mobi/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sinergia\\Sinergia\\": ""
+        }
+    }
+}

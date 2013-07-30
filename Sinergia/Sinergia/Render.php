@@ -1,6 +1,6 @@
 <?php
 
-namespace Sinergia;
+namespace Sinergia\Sinergia;
 /**
  * Esta classe melhora a utilização de ob_start, para renderizar um template para string
  * Class Render

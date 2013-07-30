@@ -1,6 +1,6 @@
 <?php
 
-namespace Sinergia;
+namespace Sinergia\Sinergia;
 
 class Error
 {
