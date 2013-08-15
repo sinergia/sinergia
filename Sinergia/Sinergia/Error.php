@@ -6,6 +6,7 @@ class Error
 {
     protected static $stack = array();
     /**
+     * @see https://github.com/freddiefrantzen/e2ex
      * utilizar restore_error_handler() para reverter
      */
     public static function toException()

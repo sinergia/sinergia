@@ -68,6 +68,7 @@ class Util
     public static $fatal_error_handler = array(__CLASS__, 'fatal_error_handler');
 
     /**
+     * @see https://github.com/freddiefrantzen/e2ex
      * Permite capturar erro fatal, ÚNICA MANEIRA!
      * Não consegue capturar erros de parse
      * Faz o mesmo que ob_start, mas permite exibir apenas o erro fatal e logar caso seja necessário.
