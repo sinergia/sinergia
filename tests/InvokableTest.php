@@ -9,6 +9,13 @@ class InvokableTestSample
 
 class InvokableTest  extends PHPUnit_Framework_Testcase
 {
+    public function testConstructor()
+    {
+        $closure = function($foo, $bar) { return "$foo|$bar"; };
+        $invokable = new Invokable($closure, array('foo' => '@', 'bar' => '%'));
+        $this->assertEquals('@|%', $invokable());
+    }
+
     public function testGetReflectionParams()
     {
         $function = function($int = 64, $array = array(2, 1), $null = null) {};

@@ -31,9 +31,10 @@ class Invokable
      *
      * @param $callable
      */
-    public function __construct($callable)
+    public function __construct($callable, $params = array())
     {
         $this->callable = $callable;
+        $this->setParams($params);
     }
 
     public function getParams()
@@ -44,7 +45,9 @@ class Invokable
 
     public function setParams($params)
     {
-        $this->params = array_merge($this->getParams(), $params);
+        if ($params) {
+            $this->params = array_merge($this->getParams(), $params);
+        }
 
         return $this;
     }
