@@ -83,4 +83,22 @@ class InvokableTest  extends PHPUnit_Framework_Testcase
         $response = $invokable(array('int' => 32));
         $this->assertEquals(32, $response);
     }
+
+    public function testRun()
+    {
+        $return = Invokable::run(function($foo) {return $foo; }, array('foo' => 'bar'));
+        $this->assertEquals('bar', $return);
+    }
+
+    public function testSetParam()
+    {
+        $closure = function($int = 64, $array = array(1, 2, 3)) { return compact('int', 'array'); };
+        $invokable = new Invokable($closure);
+        $params = array('array' => array(1, 2));
+        $invokable->setParams($params);
+
+        $this->assertEquals(array('int' => 64, 'array' => array(1, 2)), $invokable->getParams());
+
+        $this->assertEquals(array('int' => 64, 'array' => array(1, 2)), $invokable());
+    }
 }

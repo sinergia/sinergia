@@ -19,7 +19,7 @@ class Invokable
      */
     protected $reflection;
     protected $callable;
-    protected $params;
+    protected $params = array();
 
     /**
      * 'function_name'
@@ -42,6 +42,13 @@ class Invokable
                $this->params = static::getReflectionParams($this->getReflection());
     }
 
+    public function setParams($params)
+    {
+        $this->params = array_merge($this->getParams(), $params);
+
+        return $this;
+    }
+
     public function getReflection()
     {
         return $this->reflection ?:
@@ -55,6 +62,17 @@ class Invokable
         return is_callable($this->callable)
                ? call_user_func_array($this->callable, $args)
                : null;
+    }
+
+    /**
+     * @param $callable
+     * @param array $params
+     * @return mixed
+     */
+    public static function run($callable, $params = array())
+    {
+        $invokable = new static($callable);
+        return $invokable($params);
     }
 
     /**
