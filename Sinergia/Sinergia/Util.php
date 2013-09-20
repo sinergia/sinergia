@@ -2,65 +2,10 @@
 
 namespace Sinergia\Sinergia;
 
-use ReflectionMethod,
-    ReflectionFunction,
-    ReflectionFunctionAbstract,
-    Closure;
+use Closure;
 
 class Util
 {
-    /**
-     * Reflects anything that is callable
-     * 'function_name'
-     * 'Static::method'
-     * array($object, 'method')
-     * array('Class', 'method')
-     * $Invokeable
-     * function() {} closure
-     * @param $callable
-     * @return ReflectionFunction|ReflectionMethod
-     */
-    public static function callableToReflection($callable)
-    {
-        if ( is_string($callable) ) {
-            if ( function_exists($callable) ) {
-                return new ReflectionFunction($callable);
-            }
-            list($class, $method) = explode("::", $callable);
-
-            return new ReflectionMethod($class, $method);
-        }
-
-        if ( is_array($callable) ) {
-            list($class, $method) = $callable;
-
-            return new ReflectionMethod($class, $method);
-        }
-
-        if ( is_object($callable) ) {
-            if ($callable instanceof Closure) {
-                return new ReflectionFunction($callable);
-            }
-
-            return new ReflectionMethod($callable, '__invoke');
-        }
-    }
-
-    /**
-     * Returns the function parameters as a dictionary with name => default value
-     * @param  ReflectionFunctionAbstract $r
-     * @return array
-     */
-    public static function getParameters(ReflectionFunctionAbstract $r)
-    {
-        $parameters = array();
-        foreach ($r->getParameters() as $p) {
-            $parameters[$p->getName()] = $p->isDefaultValueAvailable() ? $p->getDefaultValue() : null;
-        }
-
-        return $parameters;
-    }
-
     /**
      * Default fatal error
      * @var \Closure $fatal_error_handler

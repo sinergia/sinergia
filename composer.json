@@ -17,5 +17,13 @@
         "psr-0": {
             "Sinergia\\Sinergia\\": ""
         }
+    },
+
+    "config": {
+        "preferred-install": "dist"
+    },
+
+    "scripts": {
+        "post-install-cmd": ["[[ -f phpunit.phar ]] || wget https://phar.phpunit.de/phpunit.phar", "chmod +x phpunit.phar"]
     }
 }
