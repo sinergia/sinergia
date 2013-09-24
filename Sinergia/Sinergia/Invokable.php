@@ -67,6 +67,20 @@ class Invokable
                : null;
     }
 
+    public function __toString()
+    {
+        $reflection = $this->getReflection();
+
+        if ( $reflection instanceof ReflectionMethod ) {
+            $separator = $reflection->isStatic() ? '::' : '->';
+            $name = sprintf("%s%s%s", $reflection->class, $separator, $reflection->getName());
+        } else {
+            $name = $this->getReflection()->getName();
+        }
+
+        return (string) $name;
+    }
+
     /**
      * @param $callable
      * @param array $params
@@ -129,6 +143,4 @@ class Invokable
 
         return $parameters;
     }
-
-
 }

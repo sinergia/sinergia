@@ -108,4 +108,29 @@ class InvokableTest  extends PHPUnit_Framework_Testcase
 
         $this->assertEquals(array('int' => 64, 'array' => array(1, 2)), $invokable());
     }
+
+    public function testToStringClosure()
+    {
+        $closure = function(){};
+        $invokable = new Invokable($closure);
+        $this->assertEquals("{closure}", (string) $invokable);
+    }
+
+    public function testToStringFunction()
+    {
+        $invokable = new Invokable('rand');
+        $this->assertEquals("rand", (string) $invokable);
+    }
+
+    public function testToStringStatic()
+    {
+        $invokable = new Invokable('ReflectionClass::export');
+        $this->assertEquals('ReflectionClass::export', (string) $invokable);
+    }
+
+    public function testToStringObject()
+    {
+        $invokable = new Invokable(array(new ArrayIterator(), 'count'));
+        $this->assertEquals('ArrayIterator->count', (string) $invokable);
+    }
 }
