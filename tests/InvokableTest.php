@@ -133,4 +133,13 @@ class InvokableTest  extends PHPUnit_Framework_Testcase
         $invokable = new Invokable(array(new ArrayIterator(), 'count'));
         $this->assertEquals('ArrayIterator->count', (string) $invokable);
     }
+
+    /**
+     * @expectedException BadFunctionCallException
+     */
+    public function testFunctionNotFound()
+    {
+        $invokable = new Invokable('function_not_found');
+        $invokable();
+    }
 }

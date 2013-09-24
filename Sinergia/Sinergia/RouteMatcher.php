@@ -43,7 +43,7 @@ class RouteMatcher
 
     /**
      * Converts a easy route expression to regular expression used by the match method
-     * @param string $expression
+     * @param  string $expression
      * @return string
      */
     public static function regex($expression)

@@ -4,6 +4,7 @@ namespace Sinergia\Sinergia;
 
 use ReflectionMethod,
     ReflectionFunction,
+    BadFunctionCallException,
     ReflectionFunctionAbstract,
     Closure;
 
@@ -40,7 +41,7 @@ class Invokable
     public function getParams()
     {
         return $this->params ?:
-               $this->params = static::getReflectionParams($this->getReflection());
+            $this->params = static::getReflectionParams($this->getReflection());
     }
 
     public function setParams($params)
@@ -55,23 +56,21 @@ class Invokable
     public function getReflection()
     {
         return $this->reflection ?:
-               $this->reflection = static::callableToReflection($this->callable);
+            $this->reflection = static::callableToReflection($this->callable);
     }
 
     public function __invoke($args = array())
     {
         $args = array_merge($this->getParams(), $args);
 
-        return is_callable($this->callable)
-               ? call_user_func_array($this->callable, $args)
-               : null;
+        return $this->getReflection()->invokeArgs($args);
     }
 
     public function __toString()
     {
         $reflection = $this->getReflection();
 
-        if ( $reflection instanceof ReflectionMethod ) {
+        if ($reflection instanceof ReflectionMethod) {
             $separator = $reflection->isStatic() ? '::' : '->';
             $name = sprintf("%s%s%s", $reflection->class, $separator, $reflection->getName());
         } else {
@@ -83,12 +82,13 @@ class Invokable
 
     /**
      * @param $callable
-     * @param array $params
+     * @param  array $params
      * @return mixed
      */
     public static function run($callable, $params = array())
     {
         $invokable = new static($callable);
+
         return $invokable($params);
     }
 
@@ -106,12 +106,21 @@ class Invokable
     public static function callableToReflection($callable)
     {
         if ( is_string($callable) ) {
-            if ( function_exists($callable) ) {
-                return new ReflectionFunction($callable);
-            }
-            list($class, $method) = explode("::", $callable);
+            if ( strpos($callable, "::") ) {
+                list($class, $method) = explode("::", $callable);
 
-            return new ReflectionMethod($class, $method);
+                return new ReflectionMethod($class, $method);
+
+            } elseif ( function_exists($callable) ) {
+                return new ReflectionFunction($callable);
+
+            } else {
+                $fakeCallback = function() use ($callable) {
+                    throw new BadFunctionCallException("function '$callable' not found");
+                };
+
+                return new ReflectionFunction($fakeCallback);
+            }
         }
 
         if ( is_array($callable) ) {
