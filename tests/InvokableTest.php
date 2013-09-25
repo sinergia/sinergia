@@ -4,6 +4,7 @@ use Sinergia\Sinergia\Invokable;
 
 class InvokableTestSample
 {
+    public function __call($method, $args) {}
     public function __invoke() { return __CLASS__; }
 }
 
@@ -135,11 +136,40 @@ class InvokableTest  extends PHPUnit_Framework_Testcase
     }
 
     /**
-     * @expectedException BadFunctionCallException
+     * @expectedException ReflectionException
      */
     public function testFunctionNotFound()
     {
-        $invokable = new Invokable('function_not_found');
-        $invokable();
+        new Invokable('function_not_found');
+    }
+
+    /**
+     * @expectedException ReflectionException
+     */
+    public function testStaticMethodNotFound()
+    {
+        new Invokable('ReflectionClass::method_not_found');
+    }
+
+    /**
+     * @expectedException ReflectionException
+     */
+    public function testInstanceMethodNotFound()
+    {
+        new Invokable(array(new ArrayIterator(), 'method_not_found'));
+    }
+
+    /**
+     * @expectedException ReflectionException
+     */
+    public function testInstanceMethodCall()
+    {
+        new Invokable(array(new InvokableTestSample(), 'method_not_found'));
+    }
+
+    public function testInvokeObject()
+    {
+        $invokable = new Invokable(array(new ArrayIterator(), 'count'));
+        $this->assertEquals(0, $invokable());
     }
 }

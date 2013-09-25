@@ -35,6 +35,7 @@ class Invokable
     public function __construct($callable, $params = array())
     {
         $this->callable = $callable;
+        $this->getReflection();
         $this->setParams($params);
     }
 
@@ -59,11 +60,16 @@ class Invokable
             $this->reflection = static::callableToReflection($this->callable);
     }
 
-    public function __invoke($args = array())
+    public function call($args = array())
     {
         $args = array_merge($this->getParams(), $args);
 
-        return $this->getReflection()->invokeArgs($args);
+        return call_user_func_array($this->callable, $args);
+    }
+
+    public function __invoke($args = array())
+    {
+        return $this->call($args);
     }
 
     public function __toString()
@@ -87,9 +93,9 @@ class Invokable
      */
     public static function run($callable, $params = array())
     {
-        $invokable = new static($callable);
+        $invokable = new static($callable, $params);
 
-        return $invokable($params);
+        return $invokable();
     }
 
     /**
@@ -111,15 +117,9 @@ class Invokable
 
                 return new ReflectionMethod($class, $method);
 
-            } elseif ( function_exists($callable) ) {
+            } else {
                 return new ReflectionFunction($callable);
 
-            } else {
-                $fakeCallback = function() use ($callable) {
-                    throw new BadFunctionCallException("function '$callable' not found");
-                };
-
-                return new ReflectionFunction($fakeCallback);
             }
         }
 
