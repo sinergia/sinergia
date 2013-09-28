@@ -38,7 +38,13 @@ class Router
      * @param $method
      * @return Invokable
      */
-    public function route($path, $method)
+    public function route($path, $method, $params = array())
+    {
+        $route = $this->getRouteFor($path, $method);
+        return $route ? $route($params) : null;
+    }
+
+    public function getRouteFor($path, $method)
     {
         $method = strtoupper($method);
         $routes = $this->{$method};
